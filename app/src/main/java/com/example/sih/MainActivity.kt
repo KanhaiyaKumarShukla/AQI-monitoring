@@ -25,16 +25,16 @@ class MainActivity : AppCompatActivity() {
 
     private val Tag="SmsReceiver"
     private val SMS_PERMISSION_CODE = 1
-    private val senderPhoneNumber = "+919755666218"
+    private val senderPhoneNumber = "+919334993909"
 
-//    private val smsReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            val message = intent?.getStringExtra("message")
-//            message?.let {
-//                binding.tv.append("New SMS: $it\n")
-//            }
-//        }
-//    }
+    private val smsReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val message = intent?.getStringExtra("message")
+            message?.let {
+                binding.tv.append("New SMS: $it\n")
+            }
+        }
+    }
 
     private fun checkForSmsPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
             ), SMS_PERMISSION_CODE)
         } else {
             Log.d(Tag, "Request granted in check")
-            readSmsMessages()
-            //LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
+            // readSmsMessages()
+            LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
         }
     }
 
@@ -55,8 +55,8 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(Tag, "Request granted in request permission")
-            readSmsMessages()
-            //LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
+            //readSmsMessages()
+            LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
         }
     }
 
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // Unregister the receiver to prevent memory leaks
-        // LocalBroadcastManager.getInstance(this).unregisterReceiver(smsReceiver)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(smsReceiver)
     }
     private fun readSmsMessages() {
         val smsList = mutableListOf<String>()
