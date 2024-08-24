@@ -15,6 +15,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        renderscriptTargetApi = 19
+        renderscriptSupportModeEnabled = true
     }
 
     buildTypes {
@@ -48,4 +50,30 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation (libs.androidx.recyclerview)
+    implementation (libs.glide)
+    implementation(libs.androidx.core.splashscreen)
+    val nav_version = "2.7.7"
+
+    // Views/Fragments integration
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+    val lifecycle_version = "2.8.0"
+
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx.v280)
+    implementation(libs.androidx.lifecycle.livedata.ktx.v280)
+    implementation (libs.androidx.lifecycle.common.java8)
+    implementation (libs.logging.interceptor)
+
+    // shimmer
+    implementation (libs.shimmer)
+
+    // coroutine
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.kotlinx.coroutines.core)
+
 }

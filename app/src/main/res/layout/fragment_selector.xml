@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".onboarding.fragment.SelectorFragment">
+
+        <!-- ImageView to set as background -->
+        <ImageView
+            android:id="@+id/backgroundImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bg_img"
+            android:layout_centerInParent="true"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/admin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:background="#B22B2B"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Admin"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/users"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:background="#127B71"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Users"
+            android:layout_marginTop="30dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+           />
+        </LinearLayout>
+
+
+</RelativeLayout>

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">sih</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="country">Country:</string>
+    <string name="empty_dash">-</string>
+    <string name="state">State:</string>
+    <string name="aqi_good_text">Air quality is considered satisfactory, and air pollution poses little or no risk.</string>
+    <string name="aqi_moderate_text">Air quality is acceptable; however, for some pollutants, there may be a moderate health concern for a very small number of people who are sensitive to air pollution.</string>
+    <string name="aqi_unhealthy_sensitive_text">Members of sensitive groups may experience health effects. The general public is not likely to be affected.</string>
+    <string name="aqi_unhealthy_text">Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects.</string>
+    <string name="aqi_very_unhealthy_text">Health alert: everyone may experience more serious health effects.</string>
+    <string name="aqi_hazardous_text">Health warning of emergency conditions. The entire population is more likely to be affected.</string>
+    <string name="aqi_value">00</string>
+    <string name="skip">Skip\n</string>
+    <string name="continue_str">Continue</string>
 </resources>

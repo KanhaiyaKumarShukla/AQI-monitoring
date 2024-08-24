@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- TextView for Labels -->
+    <style name="LabelTextViewStyle">
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="color">@color/black</item>
+    </style>
+
+    <!-- TextView for Values -->
+    <style name="ValueTextViewStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="color">#191717</item>
+    </style>
+
+    <!-- LinearLayout Horizontal Orientation -->
+    <style name="HorizontalLinearLayout">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
+    <!-- CardView Style -->
+    <style name="CardViewStyle">
+        <item name="android:padding">16dp</item>
+        <item name="android:elevation">4dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+    </style>
+</resources>

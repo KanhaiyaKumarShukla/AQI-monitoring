@@ -13,92 +13,48 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.sih.databinding.ActivityMainBinding
+import com.example.sih.model.AqiData
+import com.example.sih.viewmodel.AqiViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
-    private val Tag="SmsReceiver"
-    private val SMS_PERMISSION_CODE = 1
-    private val senderPhoneNumber = "+919334993909"
-
-    private val smsReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val message = intent?.getStringExtra("message")
-            message?.let {
-                binding.tv.append("New SMS: $it\n")
-            }
-        }
-    }
-
-    private fun checkForSmsPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) != PackageManager.PERMISSION_GRANTED ||
-            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, arrayOf(
-                Manifest.permission.RECEIVE_SMS,
-                Manifest.permission.READ_SMS
-            ), SMS_PERMISSION_CODE)
-        } else {
-            Log.d(Tag, "Request granted in check")
-            // readSmsMessages()
-            LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == SMS_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(Tag, "Request granted in request permission")
-            //readSmsMessages()
-            LocalBroadcastManager.getInstance(this).registerReceiver(smsReceiver, IntentFilter("SmsMessageReceived"))
-        }
-    }
-
+    private var _binding: ActivityMainBinding?=null
+    private val binding get() = _binding!!
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition { true }
+        lifecycleScope.launch {
+            delay(3000)
+            splashScreen.setKeepOnScreenCondition { false }
+        }
+        _binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        checkForSmsPermission()
+
+        navHostFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        navController=navHostFragment.navController
+
     }
-    override fun onDestroy() {
-        super.onDestroy()
-        // Unregister the receiver to prevent memory leaks
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(smsReceiver)
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
-    private fun readSmsMessages() {
-        val smsList = mutableListOf<String>()
-        val uri = Uri.parse("content://sms/inbox")
 
-        // Selection criteria to filter messages from a specific sender
-        val selection = "address = ?"
-        val selectionArgs = arrayOf(senderPhoneNumber)
-
-        val cursor = contentResolver.query(uri, null, selection, selectionArgs, null)
-
-        if (cursor != null && cursor.moveToFirst()) {
-            val indexBody = cursor.getColumnIndex("body")
-            val indexAddress = cursor.getColumnIndex("address")
-
-            do {
-                val address = cursor.getString(indexAddress)
-                val body = cursor.getString(indexBody)
-                smsList.add("Sender: $address\nMessage: $body")
-            } while (cursor.moveToNext())
-
-            cursor.close()
-        }
-
-        // Display or use the SMS messages
-        for (sms in smsList) {
-            binding.tv.append(sms+"\n\n")
-        }
-    }
 
 }
