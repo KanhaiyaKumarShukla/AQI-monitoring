@@ -145,8 +145,8 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         mMap = googleMap
         mMap.uiSettings.isZoomControlsEnabled = true
         setupClusterManager()
-        val lat=23.10844
-        val lon=77.511428
+        val lat=16.3000
+        val lon=80.4500
         zoomToLocation(mMap, LatLng(lat, lon))
         socketViewModel.stationData.observe(this) { stationList ->
             // stations.clear()
@@ -435,7 +435,7 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         }
     }
 
-    private fun zoomToLocation(map: GoogleMap, location: LatLng, zoomLevel: Float = 10f) {
+    private fun zoomToLocation(map: GoogleMap, location: LatLng, zoomLevel: Float = 8f) {
         val cameraUpdate = CameraUpdateFactory.newLatLngZoom(location, zoomLevel)
         map.animateCamera(cameraUpdate)
     }
