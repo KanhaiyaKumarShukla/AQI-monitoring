@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sih.R
 import com.example.sih.common.basefragment.BaseFragment
 import com.example.sih.databinding.FragmentAdminControlBinding
@@ -28,6 +29,7 @@ import com.example.sih.viewmodel.AqiViewModel
 import com.example.sih.common.constants.AppConstants
 import com.example.sih.databinding.FragmentHomeBinding
 import com.example.sih.model.Aqi
+import com.example.sih.presentation.broadcast.fragment.home.MyAdapter
 import com.example.sih.socket.models.AirComponent
 import com.example.sih.socket.viewmodel.SocketViewModel
 import com.github.mikephil.charting.charts.BarChart
@@ -51,6 +53,9 @@ class AdminControlFragment : Fragment(R.layout.admin_control_fragment), OnMapRea
     private lateinit var binding: FragmentAdminControlBinding
     private lateinit var barChart: BarChart
     private var dataList =  mutableListOf<Pair<String, Float>>()
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var myAdapter:MyAdapter
+
 
     private val smsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -146,8 +151,11 @@ class AdminControlFragment : Fragment(R.layout.admin_control_fragment), OnMapRea
         binding = FragmentAdminControlBinding.bind(view)
         barChart = binding.barChart
         setupBarChart()
-
+        recyclerView=binding.recyclerView
         socketViewModel.startFetchingCities()
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        myAdapter = MyAdapter(emptyList())
+        recyclerView.adapter = myAdapter
         socketViewModel.stationData.observe(viewLifecycleOwner) { stationsList ->
             Log.d(tag, "station: $stationsList")
             if (!stationsList.isNullOrEmpty()) {
@@ -241,6 +249,7 @@ class AdminControlFragment : Fragment(R.layout.admin_control_fragment), OnMapRea
 
 
         dataList.sortByDescending { it.second }
+        val topCities = dataList.sortedByDescending { it.second }.take(8)
 
         Log.d(tag, "DATA List: $dataList")
 
@@ -268,7 +277,18 @@ class AdminControlFragment : Fragment(R.layout.admin_control_fragment), OnMapRea
         // Update the chart
         barChart.data = BarData(barDataSet)
         barChart.invalidate() // Refresh the chart
+
+        updateRecyclerView(topCities)
     }
+    private fun updateRecyclerView(topCities: List<Pair<String, Float>>) {
+        //val recyclerView = findViewById<RecyclerView>(R.id.recyclerView) // Or reference RecyclerView as needed
+        val adapter = binding.recyclerView.adapter as? MyAdapter
+
+        if (adapter != null) {
+            adapter.updateData(topCities)  // Updating the adapter with the filtered data
+        }
+    }
+
 
 }
 
