@@ -66,7 +66,7 @@ class SmsReceiver : BroadcastReceiver() {
                 putExtra("co", aqiData.co)
                 putExtra("o3", aqiData.o3)
                 putExtra("no2", aqiData.no2)
-                putExtra("lastUpdatedTime", aqiData.lastUpdatedTime)
+                putExtra("lastUpdatedTime", aqiData.timeStamp)
             }
 
             LocalBroadcastManager.getInstance(context).sendBroadcast(broadcastIntent)
@@ -109,7 +109,7 @@ class SmsReceiver : BroadcastReceiver() {
             co = dataMap["co"] ?: "",
             o3 = dataMap["o3"] ?: "",
             no2 = dataMap["no2"] ?: "",
-            lastUpdatedTime = dataMap["lastUpdatedTime"] ?: ""
+            timeStamp = dataMap["lastUpdatedTime"] ?: ""
         )
     }
 }

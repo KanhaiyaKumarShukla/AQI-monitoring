@@ -10,7 +10,8 @@
     <TextView
         android:id="@+id/tvItemTitle"
         style="@style/LabelTextViewStyle"
-        android:layout_width="130dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:paddingHorizontal="10dp"
         android:paddingVertical="6dp"
@@ -20,7 +21,8 @@
     <TextView
         android:id="@+id/tvItemValue"
         style="@style/ValueTextViewStyle"
-        android:layout_width="170dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:paddingHorizontal="10dp"
         android:paddingVertical="6dp"

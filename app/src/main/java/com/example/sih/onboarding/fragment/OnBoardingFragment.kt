@@ -28,6 +28,8 @@ class OnBoardingFragment : BaseFragment<FragmentOnBoardingBinding>(FragmentOnBoa
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().findViewById<View>(R.id.bottom_navigation).visibility = View.GONE
+
         viewPager = binding.viewPager
         skipButton = binding.skipButton
 
@@ -40,7 +42,7 @@ class OnBoardingFragment : BaseFragment<FragmentOnBoardingBinding>(FragmentOnBoa
         viewPager.adapter = viewPagerAdapter
 
         skipButton.setOnClickListener {
-            findNavController().navigate(R.id.action_onBoardingFragment_to_selectorFragment)
+            findNavController().navigate(R.id.action_onBoardingFragment_to_homeFragment)
         }
 
         for (i in 0 until binding.tablayout.getTabCount()) {
@@ -64,5 +66,10 @@ class OnBoardingFragment : BaseFragment<FragmentOnBoardingBinding>(FragmentOnBoa
         TabLayoutMediator(binding.tablayout, viewPager) { tab, position ->
 
         }.attach()
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Show BottomNavigationView when leaving onboarding
+        requireActivity().findViewById<View>(R.id.bottom_navigation).visibility = View.VISIBLE
     }
 }

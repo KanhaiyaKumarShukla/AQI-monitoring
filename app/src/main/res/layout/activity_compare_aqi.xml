@@ -1,0 +1,34 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/multiCitySelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Cities"
+        android:inputType="text" />
+
+    <Button
+        android:id="@+id/selectDateRangeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Date Range"
+        android:layout_marginTop="8dp" />
+
+    <Button
+        android:id="@+id/generateGraphButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Generate Graph"
+        android:layout_marginTop="16dp" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

@@ -11,5 +11,5 @@ interface APIService {
     fun getAqi(): Call<AqiData>
 
     @POST("scrape/india/madhya-pradesh/bhopal/")
-    fun postAqi(@Body userData: AqiData): Call<AqiData>
+    fun   postAqi(@Body userData: AqiData): Call<AqiData>
 }

@@ -28,4 +28,27 @@
         <item name="android:elevation">4dp</item>
         <item name="android:layout_marginBottom">16dp</item>
     </style>
+    <style name="BaseCircularButton">
+        <item name="android:background">@drawable/circular_btn_blog_post</item>
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="CircularButtonCompile" parent="BaseCircularButton">
+        <item name="android:background">@drawable/circular_btn_blog_compile</item>
+    </style>
+
+    <style name="CircularButtonSave" parent="BaseCircularButton">
+        <item name="android:background">@drawable/circular_btn_blog_save</item>
+    </style>
+
+    <style name="BottomNavigationViewLabelStyle" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">0sp</item>
+    </style>
+
+
+
 </resources>

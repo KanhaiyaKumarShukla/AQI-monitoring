@@ -21,16 +21,16 @@ class AqiRepository(private val context: Context) {
 
         // Create a JSON object with default values of "-"
         val json = JSONObject().apply {
-            put("country", aqiData.country ?: "-")
-            put("state", aqiData.state ?: "-")
-            put("city", aqiData.city ?: "-")
-            put("pm25", aqiData.pm25 ?: "-")
-            put("pm10", aqiData.pm10 ?: "-")
-            put("so2", aqiData.so2 ?: "-")
-            put("co", aqiData.co ?: "-")
-            put("o3", aqiData.o3 ?: "-")
-            put("no2", aqiData.no2 ?: "-")
-            put("lastUpdatedTime", aqiData.lastUpdatedTime ?: "-")
+            put("country", aqiData.country)
+            put("state", aqiData.state)
+            put("city", aqiData.city)
+            put("pm25", aqiData.pm25)
+            put("pm10", aqiData.pm10)
+            put("so2", aqiData.so2)
+            put("co", aqiData.co)
+            put("o3", aqiData.o3)
+            put("no2", aqiData.no2)
+            put("lastUpdatedTime", aqiData.timeStamp)
         }
 
         // Save the JSON string to SharedPreferences
@@ -55,7 +55,7 @@ class AqiRepository(private val context: Context) {
             co = jsonObject?.optString("co", "-") ?: "-",
             o3 = jsonObject?.optString("o3", "-") ?: "-",
             no2 = jsonObject?.optString("no2", "-") ?: "-",
-            lastUpdatedTime = jsonObject?.optString("lastUpdatedTime", "-") ?: "-"
+            timeStamp = jsonObject?.optString("lastUpdatedTime", "-") ?: "-"
         )
 
     }

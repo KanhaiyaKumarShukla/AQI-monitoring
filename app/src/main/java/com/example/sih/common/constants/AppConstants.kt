@@ -1,9 +1,28 @@
 package com.example.sih.common.constants
 
+import android.app.AlertDialog
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.sih.R
 import com.example.sih.api.service.APIService
+import com.example.sih.model.Aqi
 import com.example.sih.model.AqiBreakpoints
 import com.example.sih.model.AqiData
+import com.example.sih.model.ClusterMarker
+import com.example.sih.socket.models.AirComponent
+import com.example.sih.socket.models.Station
+import com.example.sih.socket.models.Stations
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -117,21 +136,128 @@ data object AppConstants{
         }
     }
 
+    // we can use this to customize the dialog box according to layout:
+    fun showDetailsDialog(clusterMarker: ClusterMarker, context: Context) {
+        val station = clusterMarker.title
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.aqi_dialog_box_layout, null)
+        val airComponentsRecycler = dialogView.findViewById<RecyclerView>(R.id.recycler_air_components)
+        val airComponentsData = getAirComponentsData(clusterMarker.getAqiData())
+        airComponentsRecycler.layoutManager = LinearLayoutManager(context)
+        airComponentsRecycler.adapter = AirComponentsAdapter(airComponentsData)
+
+        val titleView = LayoutInflater.from(context).inflate(R.layout.dialog_title_detail_layout, null) as TextView
+        titleView.text = "${station} Details"
+        AlertDialog.Builder(context)
+            .setCustomTitle(titleView)
+            .setView(dialogView)
+            .setPositiveButton("OK", null)
+            .show()
+    }
+    fun getAirComponentsData(aqiData: Aqi): List<Pair<String, String>> {
+        val airComponents = mutableListOf<Pair<String, String>>()
+
+        Aqi::class.members.filterIsInstance<kotlin.reflect.KProperty1<Aqi, *>>().forEach { property ->
+            val value = property.get(aqiData)
+            val unit = aqiData.units[property.name.uppercase()] ?: ""
+            if (value != null && property.name != "units") {
+                airComponents.add(property.name to "$value $unit")
+            }
+        }
+
+        return airComponents
+    }
+
+
+    /*
+    fun showAqiDataDialog(aqiData: Aqi, context: Context) {
+       // Prepare the message dynamically
+       val messageBuilder = StringBuilder()
+
+       // Reflection is used here to iterate over all properties of Aqi and build the dialog content
+       Aqi::class.members.filterIsInstance<kotlin.reflect.KProperty1<Aqi, *>>().forEach { property ->
+           val value = property.get(aqiData)
+           val unit = aqiData.units[property.name.uppercase()] ?: ""
+           if (value != null && property.name != "units") {
+               messageBuilder.append("${property.name}: $value $unit\n")
+           }
+       }
+
+       // Create and show the dialog
+       val dialog = AlertDialog.Builder(context)
+           .setTitle("AQI Details")
+           .setMessage(messageBuilder.toString().trim())
+           .setPositiveButton("Close", null)
+           .create()
+
+       dialog.show()
+    }
+         */
+
+
+    fun resizeBitmap(context: Context, resourceId: Int, width: Int, height: Int): BitmapDescriptor {
+       val bitmap = BitmapFactory.decodeResource(context.resources, resourceId)
+       val resizedBitmap = Bitmap.createScaledBitmap(bitmap, width, height, false)
+       return BitmapDescriptorFactory.fromBitmap(resizedBitmap)
+    }
+
+    fun Context.makeToast(message: String, isLong: Boolean = false) {
+       Toast.makeText(this, message, if (isLong) Toast.LENGTH_LONG else Toast.LENGTH_SHORT).show()
+    }
+
+
+
+
     private const val BASE_URL = "https://aqi-fetch-amaan-hussains-projects.vercel.app/"
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+       level = HttpLoggingInterceptor.Level.BODY
     }
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
-        .build()
+       .addInterceptor(loggingInterceptor)
+       .build()
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(client)
-        .build()
+       .baseUrl(BASE_URL)
+       .addConverterFactory(GsonConverterFactory.create())
+       .client(client)
+       .build()
 
     val apiService: APIService = retrofit.create(APIService::class.java)
+    val cities = listOf(
+        "Visakhapatnam", "Vijayawada", "Guntur", "Tirupati", "Kakinada", "Rajahmundry",
+        "Itanagar", "Tawang", "Naharlagun", "Ziro", "Pasighat",
+        "Guwahati", "Dibrugarh", "Jorhat", "Silchar", "Nagaon", "Tezpur",
+        "Patna", "Gaya", "Bhagalpur", "Muzaffarpur", "Purnia", "Munger",
+        "Raipur", "Bilaspur", "Durg", "Bhilai", "Korba",
+        "Panaji", "Margao", "Vasco da Gama", "Mapusa", "Ponda",
+        "Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Gandhinagar",
+        "Gurugram", "Faridabad", "Panchkula", "Ambala", "Hisar",
+        "Shimla", "Dharamshala", "Kullu", "Manali", "Solan",
+        "Ranchi", "Jamshedpur", "Dhanbad", "Bokaro", "Hazaribagh",
+        "Bengaluru", "Mysuru", "Hubli", "Mangaluru", "Belagavi", "Davangere",
+        "Thiruvananthapuram", "Kochi", "Kozhikode", "Kottayam", "Thrissur", "Malappuram",
+        "Bhopal", "Indore", "Gwalior", "Ujjain", "Jabalpur", "Sagar",
+        "Mumbai", "Pune", "Nagpur", "Nashik", "Thane", "Aurangabad",
+        "Imphal", "Shillong", "Aizawl", "Kohima", "Agartala",
+        "Delhi", "Chandigarh", "Jaipur", "Lucknow", "Kolkata", "Chennai", "Bengaluru"
+    )
+
+    fun setGradientBackground(view: View, startColor: String, endColor: String, angle: Int = 0, cornerRadius: Float = 0f) {
+        // Create a GradientDrawable with a linear gradient
+        val gradientDrawable = GradientDrawable(
+            // Set gradient direction based on angle
+            GradientDrawable.Orientation.LEFT_RIGHT, // You can change this to dynamic based on the angle
+            intArrayOf(Color.parseColor(startColor), Color.parseColor(endColor))
+        )
+
+        // Set additional properties
+        gradientDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+        gradientDrawable.cornerRadius = cornerRadius
+
+        // Set the gradient background to the provided view
+        view.background = gradientDrawable
+    }
+
+
 }

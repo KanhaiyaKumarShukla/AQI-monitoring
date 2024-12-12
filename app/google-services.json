@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "298615290653",
+    "project_id": "aqi-app-eeecb",
+    "storage_bucket": "aqi-app-eeecb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298615290653:android:4c73c403c680bb10cbfff4",
+        "android_client_info": {
+          "package_name": "com.example.sih"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5pTVZSm8rH-nE8SDF6s-EPrr6ag-tb5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

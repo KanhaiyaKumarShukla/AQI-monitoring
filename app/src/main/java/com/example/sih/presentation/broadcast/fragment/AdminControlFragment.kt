@@ -1,36 +1,56 @@
 package com.example.sih.presentation.broadcast.fragment
 
 import android.Manifest
+import android.R.attr.theme
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sih.R
 import com.example.sih.common.basefragment.BaseFragment
 import com.example.sih.databinding.FragmentAdminControlBinding
-import com.example.sih.model.AqiBreakpoints
 import com.example.sih.model.AqiData
 import com.example.sih.presentation.broadcast.util.Item
 import com.example.sih.presentation.broadcast.util.ItemAdapter
 import com.example.sih.viewmodel.AqiViewModel
 import com.example.sih.common.constants.AppConstants
+import com.example.sih.databinding.FragmentHomeBinding
+import com.example.sih.model.Aqi
+import com.example.sih.socket.models.AirComponent
+import com.example.sih.socket.viewmodel.SocketViewModel
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import kotlin.random.Random
 
-class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentAdminControlBinding::inflate) {
+class AdminControlFragment : Fragment(R.layout.admin_control_fragment), OnMapReadyCallback {
 
     private lateinit var viewModel: AqiViewModel
 
     private val tag="SmsReceiver"
     private val SMS_PERMISSION_CODE = 1
     private lateinit var itemAdapter: ItemAdapter
+    private lateinit var socketViewModel: SocketViewModel
+    private lateinit var binding: FragmentAdminControlBinding
+    private lateinit var barChart: BarChart
+    private var dataList =  mutableListOf<Pair<String, Float>>()
 
     private val smsReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -45,13 +65,17 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
                 co = intent?.getStringExtra("co")?: "",
                 o3 = intent?.getStringExtra("o3")?: "",
                 no2 = intent?.getStringExtra("no2")?: "",
-                lastUpdatedTime = intent?.getStringExtra("lastUpdatedTime") ?: ""
+                timeStamp = intent?.getStringExtra("lastUpdatedTime") ?: ""
             )
             Log.d(tag, aqiData.toString())
             viewModel.saveAqiData(aqiData)
             postOnApi(aqiData)
-            updateUI(aqiData)
+            //updateUI(aqiData)
         }
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+
     }
 
     private fun postOnApi(aqiData: AqiData) {
@@ -62,7 +86,7 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
 
                 Log.d(tag, "Success post $it")
                 viewModel.saveAqiData(aqiData)
-                updateUI(aqiData)
+                //updateUI(aqiData)
             }else{
                 Log.d(tag, "Error registering new user")
             }
@@ -90,11 +114,12 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == SMS_PERMISSION_CODE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             Log.d(tag, "Request granted in request permission")
-            //readSmsMessages()
+            // readSmsMessages()
             viewModel.loadLastAqiData()
             LocalBroadcastManager.getInstance(requireContext()).registerReceiver(smsReceiver, IntentFilter("AqiDataReceived"))
         }
     }
+    /*
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[AqiViewModel::class.java]
@@ -114,7 +139,52 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
         }
 
         checkForSmsPermission()
+    }*/
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        socketViewModel = ViewModelProvider(this)[SocketViewModel::class.java]
+        binding = FragmentAdminControlBinding.bind(view)
+        barChart = binding.barChart
+        setupBarChart()
+
+        socketViewModel.startFetchingCities()
+        socketViewModel.stationData.observe(viewLifecycleOwner) { stationsList ->
+            Log.d(tag, "station: $stationsList")
+            if (!stationsList.isNullOrEmpty()) {
+                // Extract city names and AQI values
+                val stationAqiData = stationsList.mapNotNull { station ->
+                    val cityName = station.cityName // Assuming there's a `city` property in the station object
+                    val aqiValue = when (val components = station.airComponents) {
+                        is List<*> -> components.filterIsInstance<Aqi>().firstOrNull()?.AQI_IN // If airComponents is a list
+                        is Aqi -> components.AQI_IN // If airComponents is a single Aqi object
+                        else -> null
+                    }
+                    Log.d(tag, "cityName: $cityName $aqiValue")
+                    if (cityName != null && aqiValue != null) Pair(cityName, (aqiValue+getRandomNumber()).toFloat()) else null
+
+                }
+
+                // Update the dataList used for the chart
+                //dataList.clear()
+                dataList.addAll(stationAqiData)
+
+                if (dataList.size > 8) {
+                    dataList = dataList.takeLast(8).toMutableList()
+                }
+                Log.d(tag, "cityAqi: $stationAqiData")
+                // Update the bar chart
+                updateBarGraph()
+            }
+        }
+
     }
+
+    fun getRandomNumber(): Int {
+        return Random.nextInt(-5, 5)
+    }
+
+
+        /*
     private fun updateUI(data: AqiData){
 
         binding.shimmerLayout.visibility = View.INVISIBLE
@@ -130,7 +200,7 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
             Item(title = "CO", value = data.co),
             Item(title = "O3", value = data.o3),
             Item(title = "NO2", value = data.no2),
-            Item(title = "Last Updated", value = data.lastUpdatedTime)
+            Item(title = "Last Updated", value = data.timeStamp)
         )
         val aqiValue=AppConstants.calculateOverallAqi(data)
         updateAqiDisplay(aqiValue)
@@ -148,9 +218,57 @@ class AdminControlFragment : BaseFragment<FragmentAdminControlBinding>(FragmentA
         aqiSuggestionText.text = aqiSuggestion
         binding.aqiValueTV.text=aqi.toString()
     }
+
+     */
     override fun onDestroy() {
         super.onDestroy()
         // Unregister the receiver to prevent memory leaks
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(smsReceiver)
     }
+
+    private fun setupBarChart() {
+        barChart.description.isEnabled = false
+        barChart.setDrawGridBackground(false)
+        barChart.setScaleEnabled(true)
+        barChart.axisRight.isEnabled = false
+        barChart.axisLeft.axisMinimum = 0f // Set minimum Y value to 0
+        barChart.xAxis.setDrawGridLines(false)
+        barChart.xAxis.isEnabled = false // Disable X-axis labels
+    }
+
+    private fun updateBarGraph() {
+        // Sort data by AQI value in descending order
+
+
+        dataList.sortByDescending { it.second }
+
+        Log.d(tag, "DATA List: $dataList")
+
+        // Convert data to BarEntries
+        val entries = dataList.mapIndexed { index, pair ->
+            BarEntry(index.toFloat(), pair.second)
+        }
+        Log.d(tag, "entries: $entries")
+
+        // Create BarDataSet and attach it to BarData
+        val barDataSet = BarDataSet(entries, "AQI by City")
+        barDataSet.valueTextSize = 12f
+        barDataSet.setColors(ContextCompat.getColor(requireContext(), R.color.colorGray))
+
+        barDataSet.valueFormatter = IndexAxisValueFormatter(dataList.map { it.first })
+
+        // Set up the X-axis labels
+        val xAxis = barChart.xAxis
+        xAxis.valueFormatter = IndexAxisValueFormatter(dataList.map { it.first }) // Set city names
+        xAxis.position = XAxis.XAxisPosition.BOTTOM // Position labels at the bottom
+        xAxis.granularity = 1f // Ensure labels appear per bar
+        xAxis.isGranularityEnabled = true
+        xAxis.labelRotationAngle = -45f
+
+        // Update the chart
+        barChart.data = BarData(barDataSet)
+        barChart.invalidate() // Refresh the chart
+    }
+
 }
+

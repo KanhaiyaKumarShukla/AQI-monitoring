@@ -24,6 +24,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.sih.databinding.ActivityMainBinding
 import com.example.sih.model.AqiData
 import com.example.sih.viewmodel.AqiViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
 
+    private lateinit var bottomNavigationView: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,13 +47,42 @@ class MainActivity : AppCompatActivity() {
             delay(3000)
             splashScreen.setKeepOnScreenCondition { false }
         }
-        _binding=ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        navHostFragment=supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        bottomNavigationView = binding.bottomNavigation
 
-        navController=navHostFragment.navController
+        navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
+        navController = navHostFragment.navController
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> {
+                    navController.navigate(R.id.homeFragment)
+                    true
+                }
+
+                R.id.nav_map -> {
+                    navController.navigate(R.id.mapFragment)
+                    true
+                }
+
+                R.id.nav_news -> {
+                    navController.navigate(R.id.newsFragment)
+                    true
+                }
+
+                R.id.nav_admin -> {
+                    navController.navigate(R.id.adminControlFragment)
+                    true
+                }
+
+                else -> false
+            }
+
+        }
     }
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
