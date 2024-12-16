@@ -11,7 +11,7 @@
         android:padding="16dp"
         android:clipToPadding="false" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_fab"
+        android:id="@+id/add_news"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

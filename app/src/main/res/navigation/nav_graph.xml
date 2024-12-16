@@ -62,5 +62,31 @@
         android:id="@+id/newsFragment"
         android:name="com.example.sih.presentation.broadcast.fragment.news.NewsFragment"
         android:label="fragment_news"
-        tools:layout="@layout/fragment_news" />
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_newsFragment_to_compareAqiActivity"
+            app:destination="@id/compareAqiActivity" />
+        <action
+            android:id="@+id/action_newsFragment_to_blogDetailFragment"
+            app:destination="@id/blogDetailFragment" />
+        <action
+            android:id="@+id/action_newsFragment_to_blogPostFragment"
+            app:destination="@id/blogPostFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/compareAqiActivity"
+        android:name="com.example.sih.CompareAqiActivity"
+        android:label="CompareAqiActivity" />
+    <fragment
+        android:id="@+id/blogPostFragment"
+        android:name="com.example.sih.presentation.broadcast.fragment.news.BlogPostFragment"
+        android:label="BlogPostFragment" >
+        <action
+            android:id="@+id/action_blogPostFragment_to_compareAqiActivity"
+            app:destination="@id/compareAqiActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/blogDetailFragment"
+        android:name="com.example.sih.presentation.broadcast.fragment.news.BlogDetailFragment"
+        android:label="BlogDetailFragment" />
 </navigation>
