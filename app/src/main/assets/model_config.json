@@ -1,0 +1,10 @@
+[
+	{
+		"co_mean": 1.25,
+		"co_std": 0.3,
+		"temp_mean": 25,
+		"temp_std": 5,
+		"humidity_mean": 65,
+		"humidity_std": 15
+	}
+]

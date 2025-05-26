@@ -16,5 +16,8 @@
     <color name="colorNewsPost">#3C663C</color>
     <color name="colorCompile">#876737</color>
     <color name="saveNews">#5D679E</color>
+    <color name="chart_line">#4FC3F7</color>
+    <color name="chart_fill_start">#804FC3F7</color>
+    <color name="chart_fill_end">#004FC3F7</color>
 
 </resources>

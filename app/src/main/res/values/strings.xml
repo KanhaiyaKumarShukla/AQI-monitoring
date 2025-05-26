@@ -57,4 +57,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+
+    <string name="PLACE_API_KEY">"AIzaSyAG71oZoh5EI4bfro8Kct2wySMflLwOR6k"</string>
+
 </resources>

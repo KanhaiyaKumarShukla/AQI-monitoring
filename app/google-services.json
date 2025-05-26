@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "298615290653",
-    "project_id": "aqi-app-eeecb",
-    "storage_bucket": "aqi-app-eeecb.firebasestorage.app"
+    "project_number": "1031765377674",
+    "project_id": "chat-app-aa8a6",
+    "storage_bucket": "chat-app-aa8a6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:298615290653:android:4c73c403c680bb10cbfff4",
+        "mobilesdk_app_id": "1:1031765377674:android:ac227e7868604086e06373",
         "android_client_info": {
           "package_name": "com.example.sih"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA5pTVZSm8rH-nE8SDF6s-EPrr6ag-tb5I"
+          "current_key": "AIzaSyCY28QYaAx-3a6WUU1a_4CJP1FbFrNmNps"
         }
       ],
       "services": {
