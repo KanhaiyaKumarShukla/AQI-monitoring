@@ -26,7 +26,7 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
 ### 🏠 Home Screen (Real-time AQI & Trends)
 | Real-time AQI | Trends & Calendar |
 |---------------|-------------------|
-| ![Home 1](screenshots/home1.png) | ![Home 2](screenshots/home2.png) |
+| ![Home 1](screenshots/home1.jpg) | ![Home 2](screenshots/home2.png) |
 
 ---
 
