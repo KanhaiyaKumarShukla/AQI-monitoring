@@ -181,12 +181,29 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
   <tr>
     <td align="center">
       <img src="screenshots/status1.jpg" width="300"/><br/>
-      <b>Status View 1</b>
+      <b>Sensor Status On Map</b>
     </td>
     <td align="center">
       <img src="screenshots/status2.jpg" width="300"/><br/>
-      <b>Status View 2</b>
+      <b>Sensor Active Range</b>
     </td>
+
+    <td align="center">
+      <img src="screenshots/status3.jpg" width="300"/><br/>
+      <b>Under Maintenance Status</b>
+    </td>
+
+    <td align="center">
+      <img src="screenshots/status4.jpg" width="300"/><br/>
+      <b>InActive Status</b>
+    </td>
+
+    <td align="center">
+      <img src="screenshots/status5.jpg" width="300"/><br/>
+      <b>Active Status</b>
+    </td>
+
+
   </tr>
 </table>
 </div>
