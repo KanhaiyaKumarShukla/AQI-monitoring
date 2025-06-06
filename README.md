@@ -15,6 +15,16 @@
 - [Role-Based Access Control](#role-based-access-control)
 - [Technologies Used](#technologies-used)
 - [Complex Problem Solutions](#complex-problem-solutions)
+- [Overview](#overview)
+- [Project Preview](#project-preview)
+- [Key Features](#key-features)
+- [Technical Architecture](#technical-architecture)
+- [Machine Learning Implementation](#machine-learning-implementation)
+- [Real-time Data Management](#real-time-data-management)
+- [Role-Based Access Control](#role-based-access-control)
+- [Technologies Used](#technologies-used)
+- [Complex Problem Solutions](#complex-problem-solutions)
+
 
 ## 🌟 Overview
 
