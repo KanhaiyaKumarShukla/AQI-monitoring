@@ -7,6 +7,7 @@
 
 ## 📋 Table of Contents
 - [Overview](#overview)
+- [Project Preview](#project-preview)
 - [Key Features](#key-features)
 - [Technical Architecture](#technical-architecture)
 - [Machine Learning Implementation](#machine-learning-implementation)
@@ -18,6 +19,86 @@
 ## 🌟 Overview
 
 A comprehensive Air Quality Monitoring and Management System that provides real-time AQI (Air Quality Index) updates, predictive analytics, and hierarchical management of air quality sensors across different locations. The system integrates advanced technologies to deliver accurate, real-time air quality information while maintaining efficient management of sensor networks.
+
+
+## 📸 Project Preview
+
+### 🏠 Home Screen (Real-time AQI & Trends)
+| Real-time AQI | Trends & Calendar |
+|---------------|-------------------|
+| ![Home 1](screenshots/home1.png) | ![Home 2](screenshots/home2.png) |
+
+---
+
+### 📈 Prediction Screen
+| Prediction View 1 | Prediction View 2 |
+|-------------------|-------------------|
+| ![Pred 1](screenshots/prediction1.png) | ![Pred 2](screenshots/prediction2.png) |
+
+---
+
+### 🌍 Live AQI Map
+| View 1 | View 2 |
+|--------|--------|
+| ![Map 1](screenshots/map1.png) | ![Map 2](screenshots/map2.png) |
+
+| View 3 | View 4 |
+|--------|--------|
+| ![Map 3](screenshots/map3.png) | ![Map 4](screenshots/map4.png) |
+
+---
+
+### 🔍 AQI Search by Location
+| Search Functionality |
+|----------------------|
+| ![Search](screenshots/search.png) |
+
+---
+
+### 📚 Blog Platform
+| Blog List | Blog Item 1 |
+|-----------|-------------|
+| ![Blog List](screenshots/blog_list.png) | ![Blog 1](screenshots/blog1.png) |
+
+| Blog Item 2 | Blog Item 3 |
+|-------------|-------------|
+| ![Blog 2](screenshots/blog2.png) | ![Blog 3](screenshots/blog3.png) |
+
+| Create Blog |
+|-------------|
+| ![Create Blog](screenshots/create_blog.png) |
+
+---
+
+### 👤 Profile Screen
+| User Profile |
+|--------------|
+| ![Profile](screenshots/profile.png) |
+
+---
+
+### 🛠 Admin Dashboard
+| Admin View 1 | Admin View 2 |
+|--------------|--------------|
+| ![Admin 1](screenshots/admin1.png) | ![Admin 2](screenshots/admin2.png) |
+
+| Admin View 3 |
+|--------------|
+| ![Admin 3](screenshots/admin3.png) |
+
+---
+
+### 📍 Sensor Status on Map
+| Status View 1 | Status View 2 |
+|----------------|---------------|
+| ![Status 1](screenshots/status1.png) | ![Status 2](screenshots/status2.png) |
+
+---
+
+> 🧪 **Want to see it in action?**  
+🎥 [Click here to watch the demo video](https://your-demo-link.com)
+
+
 
 ## 🚀 Key Features
 
