@@ -104,7 +104,7 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
 <table align="center">
   <tr>
     <td align="center">
-      <img src="screenshots/blog_list.jpg" width="300"/><br/>
+      <img src="screenshots/bolg_list.jpg" width="300"/><br/>
       <b>Blog List</b>
     </td>
     <td align="center">
