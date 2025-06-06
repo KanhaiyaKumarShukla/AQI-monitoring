@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sih.model.BlogPost
 import com.example.sih.repository.BlogRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.Timestamp
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
@@ -25,7 +26,7 @@ class BlogViewModel @Inject constructor(
     private val auth: FirebaseAuth
 ) : ViewModel() {
 
-    val user= auth.currentUser
+    val user = auth.currentUser
     val blogs: StateFlow<List<BlogPost>> = repository.getAllBlogs()
         .stateIn(
             scope = viewModelScope,
@@ -49,29 +50,47 @@ class BlogViewModel @Inject constructor(
     private val _errorMessage = mutableStateOf<String?>(null)
     val errorMessage: String? get() = _errorMessage.value
 
-
     fun createBlog(title: String, content: String, onSuccess: () -> Unit) {
+        if (title.isBlank()) {
+            _errorMessage.value = "Title cannot be empty"
+            return
+        }
+
+        if (content.isBlank()) {
+            _errorMessage.value = "Content cannot be empty"
+            return
+        }
+
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 auth.currentUser?.let { user ->
+                    val now = Timestamp.now()
                     val blog = BlogPost(
-                        title = title,
-                        content = content,
+                        title = title.trim(),
+                        content = content.trim(),
                         authorId = user.uid,
-                        authorName = user.displayName ?: "Anonymous"
+                        authorName = user.displayName ?: "Anonymous",
+                        createdAt = now,
+                        updatedAt = now,
+                        tags = emptyList() // You can add tag support later
                     )
+                    Log.d("BlogViewModel", "Creating blog: ${blog.title}")
                     val id = repository.createBlog(blog)
-                    Log.d("Firebase", "Created blog with ID: $id")
+                    Log.d("BlogViewModel", "Blog created with ID: $id")
+                    _errorMessage.value = null
                     onSuccess()
+                } ?: run {
+                    _errorMessage.value = "User not authenticated"
                 }
             } catch (e: Exception) {
+                Log.e("BlogViewModel", "Error creating blog", e)
                 _errorMessage.value = e.message ?: "Failed to create blog"
+            } finally {
+                _isLoading.value = false
             }
-            _isLoading.value = false
         }
     }
-
 
     fun updateBlog(blog: BlogPost, onSuccess: () -> Unit) {
         viewModelScope.launch {
@@ -97,5 +116,9 @@ class BlogViewModel @Inject constructor(
             }
             _isLoading.value = false
         }
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 }

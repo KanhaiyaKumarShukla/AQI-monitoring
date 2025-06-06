@@ -11,10 +11,14 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import com.google.firebase.firestore.FirebaseFirestoreException
 import android.util.Log
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 interface BlogRepository {
-     fun getAllBlogs(): Flow<List<BlogPost>>
-     fun getUserBlogs(userId: String): Flow<List<BlogPost>>
+    fun getAllBlogs(): Flow<List<BlogPost>>
+    fun getUserBlogs(userId: String): Flow<List<BlogPost>>
     suspend fun createBlog(blog: BlogPost): String
     suspend fun updateBlog(blog: BlogPost): Result<Unit>
     suspend fun deleteBlog(blogId: String): Result<Unit>
@@ -30,89 +34,146 @@ class BlogRepositoryImpl @Inject constructor(
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    Log.e("BlogRepository", "Error fetching blogs", error)
                     close(error)
                     return@addSnapshotListener
                 }
 
-                val blogs = snapshot?.toObjects(BlogPost::class.java) ?: emptyList()
-                trySend(blogs)
+                try {
+                    val blogs = snapshot?.documents?.mapNotNull { doc ->
+                        try {
+                            doc.toObject(BlogPost::class.java)?.copy(id = doc.id)
+                        } catch (e: Exception) {
+                            Log.e("BlogRepository", "Error converting document ${doc.id}", e)
+                            null
+                        }
+                    } ?: emptyList()
+                    trySend(blogs)
+                } catch (e: Exception) {
+                    Log.e("BlogRepository", "Error processing blogs", e)
+                    close(e)
+                }
             }
 
         awaitClose { subscription.remove() }
     }
 
     override fun getUserBlogs(userId: String): Flow<List<BlogPost>> = callbackFlow {
+        if (userId.isBlank()) {
+            trySend(emptyList())
+            return@callbackFlow
+        }
+
         val subscription = blogsCollection
             .whereEqualTo("authorId", userId)
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    Log.e("BlogRepository", "Error fetching user blogs", error)
                     close(error)
                     return@addSnapshotListener
                 }
 
-                val blogs = snapshot?.toObjects(BlogPost::class.java) ?: emptyList()
-                trySend(blogs)
+                try {
+                    val blogs = snapshot?.documents?.mapNotNull { doc ->
+                        try {
+                            doc.toObject(BlogPost::class.java)?.copy(id = doc.id)
+                        } catch (e: Exception) {
+                            Log.e("BlogRepository", "Error converting document ${doc.id}", e)
+                            null
+                        }
+                    } ?: emptyList()
+                    trySend(blogs)
+                } catch (e: Exception) {
+                    Log.e("BlogRepository", "Error processing user blogs", e)
+                    close(e)
+                }
             }
 
         awaitClose { subscription.remove() }
     }
 
-    override suspend fun createBlog(blog: BlogPost): String {
-        return try {
-            // 1. Log the input
-            Log.d("Firebase", "Attempting to create blog: ${blog.title}")
+    override suspend fun createBlog(blog: BlogPost): String = withContext(Dispatchers.IO) {
+        try {
+            // Validate blog data
+            validateBlog(blog)
 
-            // 2. Create document reference
-            val document = firestore.collection("blogs").document()
+            // Create document reference
+            val document = blogsCollection.document()
+            
+            // Create blog with ID and ensure all required fields are present
+            val blogWithId = blog.copy(
+                id = document.id,
+                title = blog.title.trim(),
+                content = blog.content.trim(),
+                createdAt = blog.createdAt,
+                updatedAt = blog.updatedAt
+            )
 
-            // 3. Create blog with ID
-            val blogWithId = blog.copy(id = document.id)
-            Log.d("Firebase", "Blog data to save: $blogWithId")
+            // Log the attempt
+            Log.d("BlogRepository", "Attempting to create blog: ${blogWithId.title}")
 
-            // 4. Attempt to save
-            document.set(blogWithId).await()
+            // Set the document data
+            document.set(blogWithId.toMap()).await()
 
-            // 5. Log success
-            Log.i("Firebase", "Blog created successfully with ID: ${document.id}")
+            // Log success
+            Log.d("BlogRepository", "Successfully created blog with ID: ${document.id}")
 
-            // 6. Return ID
+            // Return the document ID
             document.id
+
         } catch (e: FirebaseFirestoreException) {
-            // Handle Firestore-specific errors
-            Log.e("Firebase", "Firestore error creating blog", e)
+            Log.e("BlogRepository", "Firestore error creating blog", e)
             when (e.code) {
-                FirebaseFirestoreException.Code.PERMISSION_DENIED -> {
-                    throw BlogCreationException("Permission denied. Check Firestore security rules.")
-                }
-                FirebaseFirestoreException.Code.UNAVAILABLE -> {
+                FirebaseFirestoreException.Code.PERMISSION_DENIED ->
+                    throw BlogCreationException("Permission denied. Please check your authentication status.")
+                FirebaseFirestoreException.Code.UNAVAILABLE ->
                     throw BlogCreationException("Network unavailable. Please check your connection.")
-                }
-                else -> {
-                    throw BlogCreationException("Firestore error: ${e.message}")
-                }
+                else ->
+                    throw BlogCreationException("Database error: ${e.message}")
             }
+        } catch (e: IllegalArgumentException) {
+            Log.e("BlogRepository", "Validation error", e)
+            throw e
         } catch (e: Exception) {
-            // Handle other exceptions
-            Log.e("Firebase", "General error creating blog", e)
-            throw BlogCreationException("Failed to create blog: ${e.message}")
+            Log.e("BlogRepository", "Unexpected error creating blog", e)
+            throw BlogCreationException("An unexpected error occurred: ${e.message}")
         }
     }
 
-    // Custom exception class
+    private fun validateBlog(blog: BlogPost) {
+        when {
+            blog.title.isBlank() -> throw IllegalArgumentException("Title cannot be empty")
+            blog.content.isBlank() -> throw IllegalArgumentException("Content cannot be empty")
+            blog.authorId.isBlank() -> throw IllegalArgumentException("Author ID cannot be empty")
+            blog.title.length > 100 -> throw IllegalArgumentException("Title cannot be longer than 100 characters")
+            blog.content.length > 50000 -> throw IllegalArgumentException("Content cannot be longer than 50000 characters")
+        }
+    }
+
+    override suspend fun updateBlog(blog: BlogPost): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            validateBlog(blog)
+            blogsCollection.document(blog.id).set(blog.toMap()).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("BlogRepository", "Error updating blog", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteBlog(blogId: String): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            if (blogId.isBlank()) {
+                throw IllegalArgumentException("Blog ID cannot be empty")
+            }
+            blogsCollection.document(blogId).delete().await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Log.e("BlogRepository", "Error deleting blog", e)
+            Result.failure(e)
+        }
+    }
+
     class BlogCreationException(message: String) : Exception(message)
-
-    override suspend fun updateBlog(blog: BlogPost): Result<Unit> = try {
-        blogsCollection.document(blog.id).set(blog).await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
-
-    override suspend fun deleteBlog(blogId: String): Result<Unit> = try {
-        blogsCollection.document(blogId).delete().await()
-        Result.success(Unit)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
 }

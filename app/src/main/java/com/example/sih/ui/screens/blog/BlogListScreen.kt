@@ -292,6 +292,17 @@ fun BlogEditorScreen(
     var title by rememberSaveable { mutableStateOf("") }
     var content by rememberSaveable { mutableStateOf("") }
     var isPreview by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    val isLoading by viewModel.isLoading.collectAsState()
+    val errorMessage = viewModel.errorMessage
+
+    // Show error message if any
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
 
     BackHandler(enabled = true) {
         if (isPreview) {
@@ -314,52 +325,35 @@ fun BlogEditorScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (blogId == null) "New Blog Post" else "Edit Post") },
+                title = { Text(if (blogId == null) "Create Blog" else "Edit Blog") },
                 navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            if (isPreview) {
-                                isPreview = false // Switch to editor mode
-                            } else {
-                                navController.popBackStack() // Exit screen
-                            }
-                        },
-                        colors = IconButtonDefaults.iconButtonColors(
-                            contentColor = MaterialTheme.colorScheme.onSurface
-                        )
-                    ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, "Back")
                     }
                 },
                 actions = {
-                    // Preview toggle button with better visual feedback
-                    FilledTonalIconButton(
-                        onClick = { isPreview = !isPreview },
-                        colors = IconButtonDefaults.filledTonalIconButtonColors(
-                            containerColor = if (isPreview) {
-                                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)
-                            }
-                            else{
-                                MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
-                            },
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-                        )
+                    IconButton(
+                        onClick = { isPreview = !isPreview }
                     ) {
                         Icon(
                             if (isPreview) Icons.Default.Edit else Icons.Default.Visibility,
-                            if (isPreview) "Edit Mode" else "Preview Mode"
+                            if (isPreview) "Edit" else "Preview"
                         )
                     }
                 }
             )
         },
         floatingActionButton = {
-            // Save button with more prominent design
             FloatingActionButton(
                 onClick = {
+                    if (title.isBlank() || content.isBlank()) {
+                        Toast.makeText(context, "Title and content cannot be empty", Toast.LENGTH_SHORT).show()
+                        return@FloatingActionButton
+                    }
+                    
                     if (blogId == null) {
-                        Log.d("Firebase", "creating blog with ID")
                         viewModel.createBlog(title, content) {
+                            Toast.makeText(context, "Blog created successfully", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }
                     } else {
@@ -372,135 +366,73 @@ fun BlogEditorScreen(
                                 authorName = viewModel.user?.displayName ?: "Anonymous"
                             )
                         ) {
+                            Toast.makeText(context, "Blog updated successfully", Toast.LENGTH_SHORT).show()
                             navController.popBackStack()
                         }
                     }
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             ) {
-                Icon(Icons.Default.Save, "Save Post")
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                } else {
+                    Icon(Icons.Default.Save, "Save Post")
+                }
             }
         }
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .padding(padding)
-                .fillMaxSize()
-        ) {
-            if (!isPreview) {
-                // Editor mode
-                Column(modifier = Modifier.fillMaxSize()) {
-                    // Title field with clear visual hierarchy
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(16.dp)
+            ) {
+                if (!isPreview) {
+                    // Editor mode
                     OutlinedTextField(
                         value = title,
                         onValueChange = { title = it },
-                        label = { Text("Post Title") },
+                        label = { Text("Title") },
+                        modifier = Modifier.fillMaxWidth(),
+                        isError = title.isBlank(),
+                        supportingText = if (title.isBlank()) {
+                            { Text("Title is required") }
+                        } else null
+                    )
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    OutlinedTextField(
+                        value = content,
+                        onValueChange = { content = it },
+                        label = { Text("Content (Markdown supported)") },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        singleLine = true,
-                        textStyle = MaterialTheme.typography.headlineSmall,
-                        colors = TextFieldDefaults.colors(
-                            focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                            unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                            disabledTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f),
-                            errorTextColor = MaterialTheme.colorScheme.error,
-                            focusedContainerColor = MaterialTheme.colorScheme.surface,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                            disabledContainerColor = MaterialTheme.colorScheme.surface,
-                            errorContainerColor = MaterialTheme.colorScheme.surface,
-                            cursorColor = MaterialTheme.colorScheme.primary,
-                            errorCursorColor = MaterialTheme.colorScheme.error,
-                            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                            unfocusedIndicatorColor = MaterialTheme.colorScheme.outline,
-                            disabledIndicatorColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.38f),
-                            errorIndicatorColor = MaterialTheme.colorScheme.error,
-                            focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            disabledLeadingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                            errorLeadingIconColor = MaterialTheme.colorScheme.error,
-                            focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
-                            unfocusedTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                            errorTrailingIconColor = MaterialTheme.colorScheme.error,
-                            focusedLabelColor = MaterialTheme.colorScheme.primary,
-                            unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                            errorLabelColor = MaterialTheme.colorScheme.error,
-                            focusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                            disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f),
-                            errorPlaceholderColor = MaterialTheme.colorScheme.error
-                        )
+                            .weight(1f),
+                        isError = content.isBlank(),
+                        supportingText = if (content.isBlank()) {
+                            { Text("Content is required") }
+                        } else null
                     )
-
-                    // Editor section with clear header
+                } else {
+                    // Preview mode
                     Text(
-                        text = "Content (Markdown supported)",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f),
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        text = title,
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.padding(bottom = 16.dp)
                     )
-
-                    // Markdown editor with better visual cues
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 16.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.surface,
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outline.copy(alpha = 0.5f),
-                                shape = MaterialTheme.shapes.medium
-                            )
-                            .padding(16.dp)
-                    ) {
-                        BasicTextField(
-                            value = content,
-                            onValueChange = { content = it },
-                            modifier = Modifier.fillMaxSize(),
-                            textStyle = MaterialTheme.typography.bodyLarge.copy(
-                                fontFamily = FontFamily.Monospace,
-                                color = MaterialTheme.colorScheme.onSurface
-                            ),
-                            decorationBox = { innerTextField ->
-                                if (content.isEmpty()) {
-                                    Text(
-                                        "Start writing your blog content here...\n\n" +
-                                                "Use # for headings\n" +
-                                                "**bold** for bold text\n" +
-                                                "*italic* for italic text",
-                                        style = MaterialTheme.typography.bodyLarge.copy(
-                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                                        )
-                                    )
-                                }
-                                innerTextField()
-                            }
-                        )
-                    }
-
-                    // Markdown quick reference
-                    MarkdownQuickReference(modifier = Modifier.padding(16.dp))
-                }
-            } else {
-                // Preview mode
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .padding(16.dp)
-                ) {
-                    if (title.isNotEmpty()) {
-                        Text(
-                            text = title,
-                            style = MaterialTheme.typography.headlineMedium,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
-                    }
                     MarkdownContent(content)
                 }
             }
