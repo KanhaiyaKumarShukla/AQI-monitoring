@@ -21,93 +21,173 @@
 A comprehensive Air Quality Monitoring and Management System that provides real-time AQI (Air Quality Index) updates, predictive analytics, and hierarchical management of air quality sensors across different locations. The system integrates advanced technologies to deliver accurate, real-time air quality information while maintaining efficient management of sensor networks.
 
 
-## 📸 Project Preview
+## 📸 App Screenshots
 
-## 🏠 Home Screen Preview (Real-time AQI & Trends)
+---
+
+### 🏠 Home Screen Preview (Real-time AQI & Trends)
 
 <table align="center">
   <tr>
     <td align="center">
-      <img src="screenshots/home1.jpg" alt="Real-time AQI" width="300"/><br/>
+      <img src="screenshots/home1.jpg" width="300"/><br/>
       <b>Real-time AQI</b>
     </td>
     <td align="center">
-      <img src="screenshots/home2.jpg" alt="Trends & Calendar" width="300"/><br/>
+      <img src="screenshots/home2.jpg" width="300"/><br/>
       <b>Trends & Calendar</b>
     </td>
   </tr>
 </table>
 
-
 ---
 
 ### 📈 Prediction Screen
-| Prediction View 1 | Prediction View 2 |
-|-------------------|-------------------|
-| ![Pred 1](screenshots/prediction1.png) | ![Pred 2](screenshots/prediction2.png) |
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/prediction1.jpg" width="300"/><br/>
+      <b>Prediction View 1</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/prediction2.jpg" width="300"/><br/>
+      <b>Prediction View 2</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 🌍 Live AQI Map
-| View 1 | View 2 |
-|--------|--------|
-| ![Map 1](screenshots/map1.png) | ![Map 2](screenshots/map2.png) |
 
-| View 3 | View 4 |
-|--------|--------|
-| ![Map 3](screenshots/map3.png) | ![Map 4](screenshots/map4.png) |
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/map1.jpg" width="300"/><br/>
+      <b>Map View 1</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/map2.jpg" width="300"/><br/>
+      <b>Map View 2</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/map3.jpg" width="300"/><br/>
+      <b>Map View 3</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/map4.jpg" width="300"/><br/>
+      <b>Map View 4</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 🔍 AQI Search by Location
-| Search Functionality |
-|----------------------|
-| ![Search](screenshots/search.png) |
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/search.jpg" width="300"/><br/>
+      <b>Search Functionality</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 📚 Blog Platform
-| Blog List | Blog Item 1 |
-|-----------|-------------|
-| ![Blog List](screenshots/blog_list.png) | ![Blog 1](screenshots/blog1.png) |
 
-| Blog Item 2 | Blog Item 3 |
-|-------------|-------------|
-| ![Blog 2](screenshots/blog2.png) | ![Blog 3](screenshots/blog3.png) |
-
-| Create Blog |
-|-------------|
-| ![Create Blog](screenshots/create_blog.png) |
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/blog_list.jpg" width="300"/><br/>
+      <b>Blog List</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/blog1.jpg" width="300"/><br/>
+      <b>Blog Item 1</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="screenshots/blog2.jpg" width="300"/><br/>
+      <b>Blog Item 2</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/blog3.jpg" width="300"/><br/>
+      <b>Blog Item 3</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="screenshots/create_blog.jpg" width="300"/><br/>
+      <b>Create Blog</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 👤 Profile Screen
-| User Profile |
-|--------------|
-| ![Profile](screenshots/profile.png) |
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/profile.jpg" width="300"/><br/>
+      <b>User Profile</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 🛠 Admin Dashboard
-| Admin View 1 | Admin View 2 |
-|--------------|--------------|
-| ![Admin 1](screenshots/admin1.png) | ![Admin 2](screenshots/admin2.png) |
 
-| Admin View 3 |
-|--------------|
-| ![Admin 3](screenshots/admin3.png) |
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/admin1.jpg" width="300"/><br/>
+      <b>Admin View 1</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/admin2.jpg" width="300"/><br/>
+      <b>Admin View 2</b>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+      <img src="screenshots/admin3.jpg" width="300"/><br/>
+      <b>Admin View 3</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 📍 Sensor Status on Map
-| Status View 1 | Status View 2 |
-|----------------|---------------|
-| ![Status 1](screenshots/status1.png) | ![Status 2](screenshots/status2.png) |
+
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/status1.jpg" width="300"/><br/>
+      <b>Status View 1</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/status2.jpg" width="300"/><br/>
+      <b>Status View 2</b>
+    </td>
+  </tr>
+</table>
 
 ---
 
 > 🧪 **Want to see it in action?**  
 🎥 [Click here to watch the demo video](https://your-demo-link.com)
+
 
 
 
