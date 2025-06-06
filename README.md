@@ -25,10 +25,19 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
 
 ## 🏠 Home Screen Preview (Real-time AQI & Trends)
 
-<p align="center">
-  <img src="screenshots/home1.jpg" alt="Real-time AQI" width="300"/>
-  <img src="screenshots/home2.jpg" alt="Trends & Calendar" width="300"/>
-</p>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="screenshots/home1.jpg" alt="Real-time AQI" width="300"/><br/>
+      <b>Real-time AQI</b>
+    </td>
+    <td align="center">
+      <img src="screenshots/home2.jpg" alt="Trends & Calendar" width="300"/><br/>
+      <b>Trends & Calendar</b>
+    </td>
+  </tr>
+</table>
+
 
 ---
 
