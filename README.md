@@ -208,7 +208,8 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
 ---
 
 > 🧪 **Want to see it in action?**  
-🎥 [Click here to watch the demo video]([(https://youtube.com/shorts/leB24QY21B8)])
+🎥[Click here to watch the demo video](https://youtube.com/shorts/leB24QY21B8)
+
 
 
 
