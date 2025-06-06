@@ -27,7 +27,8 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
 
 ### 🏠 Home Screen Preview (Real-time AQI & Trends)
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/home1.jpg" width="300"/><br/>
@@ -39,12 +40,14 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 📈 Prediction Screen
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/prediction1.jpg" width="300"/><br/>
@@ -56,12 +59,14 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 🌍 Live AQI Map
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/map1.jpg" width="300"/><br/>
@@ -71,8 +76,6 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
       <img src="screenshots/map2.jpg" width="300"/><br/>
       <b>Map View 2</b>
     </td>
-  </tr>
-  <tr>
     <td align="center">
       <img src="screenshots/map3.jpg" width="300"/><br/>
       <b>Map View 3</b>
@@ -83,12 +86,14 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 🔍 AQI Search by Location
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/search.jpg" width="300"/><br/>
@@ -96,12 +101,14 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 📚 Blog Platform
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/bolg_list.jpg" width="300"/><br/>
@@ -111,8 +118,6 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
       <img src="screenshots/blog1.jpg" width="300"/><br/>
       <b>Blog Item 1</b>
     </td>
-  </tr>
-  <tr>
     <td align="center">
       <img src="screenshots/blog2.jpg" width="300"/><br/>
       <b>Blog Item 2</b>
@@ -121,20 +126,20 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
       <img src="screenshots/blog3.jpg" width="300"/><br/>
       <b>Blog Item 3</b>
     </td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2">
+    <td align="center">
       <img src="screenshots/create_blog.jpg" width="300"/><br/>
       <b>Create Blog</b>
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 👤 Profile Screen
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/profile.jpg" width="300"/><br/>
@@ -142,12 +147,14 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 🛠 Admin Dashboard
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/admin1.jpg" width="300"/><br/>
@@ -157,20 +164,20 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
       <img src="screenshots/admin2.jpg" width="300"/><br/>
       <b>Admin View 2</b>
     </td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2">
+    <td align="center">
       <img src="screenshots/admin3.jpg" width="300"/><br/>
       <b>Admin View 3</b>
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
 ### 📍 Sensor Status on Map
 
-<table align="center">
+<div style="overflow-x: auto; white-space: nowrap;">
+<table>
   <tr>
     <td align="center">
       <img src="screenshots/status1.jpg" width="300"/><br/>
@@ -182,6 +189,7 @@ A comprehensive Air Quality Monitoring and Management System that provides real-
     </td>
   </tr>
 </table>
+</div>
 
 ---
 
